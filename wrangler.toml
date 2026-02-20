@@ -3,3 +3,6 @@
 name = "k2spiceshop"
 pages_build_output_dir = "dist"
 
+[env.production]
+vars = { NODE_VERSION = "20.11.0" }
+
