@@ -1,0 +1,15 @@
+---
+// Component for structured data (JSON-LD)
+interface StructuredDataProps {
+  type: 'Product' | 'Organization' | 'LocalBusiness' | 'BreadcrumbList';
+  data: Record<string, any>;
+}
+
+const { type, data } = Astro.props as StructuredDataProps;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': type,
+  ...data,
+})} />

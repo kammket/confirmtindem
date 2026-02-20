@@ -1,0 +1,252 @@
+---
+// Contact page
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>Contacto - Tienda de Especias</title>
+  <meta name="description" content="Ponte en contacto con nosotros. Estamos aquí para ayudarte con cualquier pregunta sobre nuestros productos." />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <h1><a href="/">🌶️ Tienda de Especias</a></h1>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Contacto</h1>
+    
+    <div class="contact-container">
+      <div class="contact-form">
+        <h2>Envíanos un Mensaje</h2>
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="name">Nombre *</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo Electrónico *</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Asunto *</label>
+            <input type="text" id="subject" name="subject" required />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Mensaje *</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Enviar Mensaje</button>
+        </form>
+      </div>
+
+      <div class="contact-info">
+        <h2>Información de Contacto</h2>
+        
+        <div class="info-item">
+          <h3>📧 Correo Electrónico</h3>
+          <p><a href="mailto:contacto@tiendadeespecias.com">contacto@tiendadeespecias.com</a></p>
+        </div>
+
+        <div class="info-item">
+          <h3>📞 Teléfono</h3>
+          <p><a href="tel:+34123456789">+34 123 456 789</a></p>
+        </div>
+
+        <div class="info-item">
+          <h3>📍 Dirección</h3>
+          <p>
+            Tienda de Especias<br />
+            Calle Ejemplo, 123<br />
+            28001 Madrid, España
+          </p>
+        </div>
+
+        <div class="info-item">
+          <h3>🕐 Horarios</h3>
+          <p>
+            Lunes - Viernes: 9:00 - 18:00<br />
+            Sábado: 10:00 - 14:00<br />
+            Domingo: Cerrado
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Tienda de Especias. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('¡Gracias por tu mensaje! Nos pondremos en contacto pronto.');
+      (e.target as HTMLFormElement).reset();
+    });
+  </script>
+
+  <style>
+    :global(body) {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 1rem 0;
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    header h1 a {
+      color: white;
+      text-decoration: none;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    main h1 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+
+    .contact-form,
+    .contact-info {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .contact-form h2,
+    .contact-info h2 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #d9534f;
+      box-shadow: 0 0 4px rgba(217, 83, 79, 0.2);
+    }
+
+    .submit-btn {
+      background: #d9534f;
+      color: white;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: #c9302c;
+    }
+
+    .info-item {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-item h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .info-item p {
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }
+
+    .info-item a {
+      color: #d9534f;
+      text-decoration: none;
+    }
+
+    footer {
+      background: #2c3e50;
+      color: white;
+      margin-top: 4rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .contact-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html>

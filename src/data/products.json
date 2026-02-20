@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Pimienta Negra",
+    "description": "Pimienta negra de alta calidad, perfecta para realzar el sabor de tus comidas.",
+    "price": 5.99,
+    "image": "/images/pimienta-negra.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Canela en Polvo",
+    "description": "Canela en polvo 100% natural, ideal para postres y bebidas calientes.",
+    "price": 3.49,
+    "image": "/images/canela-en-polvo.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Cúrcuma",
+    "description": "Cúrcuma fresca y aromática, perfecta para tus recetas saludables.",
+    "price": 4.99,
+    "image": "/images/curcuma.jpg"
+  }
+]

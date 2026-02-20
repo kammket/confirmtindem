@@ -1,0 +1,493 @@
+---
+// Dynamic product detail page
+import products from '../../data/products.json';
+import AddToCartButton from '../../components/AddToCartButton.astro';
+
+export function getStaticPaths() {
+  return products.map(product => ({
+    params: { id: product.id.toString() },
+    props: { product }
+  }));
+}
+
+interface Props {
+  product: typeof products[0];
+}
+
+const { product } = Astro.props as Props;
+
+const SITE_TITLE = `${product.name} - Tienda de Especias`;
+const SITE_DESCRIPTION = product.description;
+
+const productSchema = {
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": product.name,
+  "image": `https://k2spiceshop.com${product.image}`,
+  "description": product.description,
+  "brand": {
+    "@type": "Brand",
+    "name": "Tienda de Especias"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": `https://k2spiceshop.com/producto/${product.id}`,
+    "priceCurrency": "EUR",
+    "price": product.price.toFixed(2),
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "250"
+  }
+};
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{SITE_TITLE}</title>
+  <meta name="description" content={SITE_DESCRIPTION} />
+  <meta name="keywords" content={`${product.name}, comprar ${product.name}, especias`} />
+  <link rel="canonical" href={`https://k2spiceshop.com/producto/${product.id}`} />
+  
+  <!-- Schema.org Product Markup -->
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+
+  <meta property="og:title" content={SITE_TITLE} />
+  <meta property="og:description" content={SITE_DESCRIPTION} />
+  <meta property="og:url" content={`https://k2spiceshop.com/producto/${product.id}`} />
+  <meta property="og:type" content="product" />
+  <meta property="og:image" content={`https://k2spiceshop.com${product.image}`} />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <h1><a href="/">🌶️ Tienda de Especias</a></h1>
+        <ul class="nav-links">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/recetas-con-especias">Recetas</a></li>
+          <li><a href="/beneficios-de-las-especias">Beneficios</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="/">Inicio</a> > <span>{product.name}</span>
+    </div>
+
+    <div class="product-detail">
+      <div class="product-gallery">
+        <img src={product.image} alt={product.name} class="main-image" />
+        <div class="image-info">
+          <p>🖼️ Foto del Producto</p>
+        </div>
+      </div>
+
+      <div class="product-details">
+        <h1>{product.name}</h1>
+        
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-count">(250 opiniones)</span>
+        </div>
+
+        <div class="price-section">
+          <p class="price">€{product.price.toFixed(2)}</p>
+          <p class="availability">✓ En Stock - Envío Gratis</p>
+        </div>
+
+        <div class="description">
+          <h2>Descripción</h2>
+          <p>{product.description}</p>
+        </div>
+
+        <div class="features">
+          <h2>Características</h2>
+          <ul>
+            <li>✓ 100% Natural y de alta calidad</li>
+            <li>✓ Sin aditivos ni conservantes</li>
+            <li>✓ Perfecto para cocina profesional y doméstica</li>
+            <li>✓ Envase hermético para mayor durabilidad</li>
+            <li>✓ Marcado con garantía de frescura</li>
+          </ul>
+        </div>
+
+        <AddToCartButton 
+          productId={product.id}
+          productName={product.name}
+          productPrice={product.price}
+          productImage={product.image}
+          productDescription={product.description}
+        />
+
+        <div class="shipping-info">
+          <div class="info-item">
+            <span class="icon">🚚</span>
+            <div>
+              <p class="title">Envío Rápido</p>
+              <p class="detail">2-5 días laborales</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="icon">🔒</span>
+            <div>
+              <p class="title">Compra Segura</p>
+              <p class="detail">Pago SSL cifrado</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="icon">↩️</span>
+            <div>
+              <p class="title">Devoluciones</p>
+              <p class="detail">30 días sin preguntas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="related-products">
+      <h2>Productos Relacionados</h2>
+      <div class="products-grid">
+        {products.filter(p => p.id !== product.id).slice(0, 3).map(relatedProduct => (
+          <div class="related-product">
+            <img src={relatedProduct.image} alt={relatedProduct.name} />
+            <h3><a href={`/producto/${relatedProduct.id}`}>{relatedProduct.name}</a></h3>
+            <p class="price">€{relatedProduct.price.toFixed(2)}</p>
+            <a href={`/producto/${relatedProduct.id}`} class="view-btn">Ver Detalles</a>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Tienda de Especias. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <style>
+    :global(body) {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    header h1 a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .breadcrumb {
+      margin-bottom: 2rem;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .breadcrumb a {
+      color: #d9534f;
+      text-decoration: none;
+    }
+
+    .product-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .product-gallery {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+
+    .image-info {
+      text-align: center;
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    .product-details {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .product-details h1 {
+      margin-top: 0;
+      font-size: 2rem;
+      color: #2c3e50;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .stars {
+      color: #f39c12;
+      font-size: 1.2rem;
+    }
+
+    .rating-count {
+      color: #999;
+      font-size: 0.95rem;
+    }
+
+    .price-section {
+      margin-bottom: 2rem;
+    }
+
+    .price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #27ae60;
+      margin: 0;
+    }
+
+    .availability {
+      color: #27ae60;
+      margin: 0.5rem 0 0 0;
+      font-weight: 600;
+    }
+
+    .description {
+      margin-bottom: 2rem;
+    }
+
+    .description h2 {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    .description p {
+      line-height: 1.6;
+      color: #666;
+    }
+
+    .features {
+      margin-bottom: 2rem;
+    }
+
+    .features h2 {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    .features ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .features li {
+      padding: 0.5rem 0;
+      color: #666;
+    }
+
+    .shipping-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #eee;
+    }
+
+    .info-item {
+      display: flex;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 2rem;
+      min-width: 50px;
+    }
+
+    .info-item .title {
+      margin: 0;
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 0.95rem;
+    }
+
+    .info-item .detail {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    .related-products {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 2px solid #eee;
+    }
+
+    .related-products h2 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 2rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .related-product {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .related-product:hover {
+      transform: translateY(-4px);
+    }
+
+    .related-product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .related-product h3 {
+      margin: 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .related-product h3 a {
+      color: #2c3e50;
+      text-decoration: none;
+    }
+
+    .related-product .price {
+      margin: 0.5rem 1rem;
+      color: #27ae60;
+      font-weight: 700;
+    }
+
+    .view-btn {
+      display: block;
+      margin: 1rem;
+      padding: 0.75rem;
+      background: #d9534f;
+      color: white;
+      text-align: center;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .view-btn:hover {
+      background: #c9302c;
+      text-decoration: none;
+    }
+
+    footer {
+      background: #2c3e50;
+      color: white;
+      margin-top: 4rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .product-detail {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .main-image {
+        height: 350px;
+      }
+
+      .product-details h1 {
+        font-size: 1.5rem;
+      }
+
+      .price {
+        font-size: 1.5rem;
+      }
+
+      .shipping-info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html>

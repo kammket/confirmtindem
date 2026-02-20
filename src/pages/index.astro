@@ -1,49 +1,458 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import products from '../data/products.json';
+import CartIcon from '../components/CartIcon.astro';
+import AddToCartButton from '../components/AddToCartButton.astro';
+
+const SITE_TITLE = 'Tienda de Especias';
+const SITE_DESCRIPTION = 'Compra las mejores especias en nuestra tienda online. Envíos a toda España.';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  
+  <!-- Organization Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Tienda de Especias",
+      "url": "https://k2spiceshop.com",
+      "logo": "https://k2spiceshop.com/logo.png",
+      "description": "Tienda online de especias de alta calidad con envíos a toda España",
+      "sameAs": [
+        "https://www.facebook.com/tiendadeespecias",
+        "https://www.instagram.com/tiendadeespecias"
+      ]
+    }
+  </script>
+
+  <title>{SITE_TITLE}</title>
+  <meta name="description" content={SITE_DESCRIPTION} />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Tienda de Especias" />
+  <meta name="keywords" content="especias, tienda online, especias de calidad, comprar especias, especias en España" />
+  <link rel="canonical" href="https://k2spiceshop.com" />
+  <meta property="og:title" content={SITE_TITLE} />
+  <meta property="og:description" content={SITE_DESCRIPTION} />
+  <meta property="og:url" content="https://k2spiceshop.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/images/og-image.jpg" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <h1><a href="/">🌶️ {SITE_TITLE}</a></h1>
+        <ul class="nav-links">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/recetas-con-especias">Recetas</a></li>
+          <li><a href="/beneficios-de-las-especias">Beneficios</a></li>
+          <li><a href="/como-usar-especias">Consejos</a></li>
+          <li><a href="/donde-comprar-especias">Dónde Comprar</a></li>
+        </ul>
+        <CartIcon />
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Bienvenido a nuestra Tienda de Especias</h1>
+      <p>Descubre una amplia variedad de especias de alta calidad con envíos rápidos a toda España.</p>
+    </section>
+
+    <section class="product-list">
+      {products.map(product => (
+        <article class="product-card">
+          <div class="product-image-container">
+            <img src={product.image} alt={product.name} loading="lazy" />
+            <div class="product-overlay">
+              <a href={`/producto/${product.id}`} class="view-details">Ver Detalles</a>
+            </div>
+          </div>
+          <div class="product-info">
+            <h2><a href={`/producto/${product.id}`}>{product.name}</a></h2>
+            <p class="description">{product.description}</p>
+            <p class="price">€{product.price.toFixed(2)}</p>
+          </div>
+          <AddToCartButton 
+            productId={product.id}
+            productName={product.name}
+            productPrice={product.price}
+            productImage={product.image}
+            productDescription={product.description}
+          />
+        </article>
+      ))}
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Tienda de Especias</h3>
+        <p>Tu tienda online de especias de calidad con envíos rápidos a toda España.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Información Legal</h3>
+        <ul>
+          <li><a href="/legal-notice">Aviso Legal</a></li>
+          <li><a href="/politica-privacidad">Política de Privacidad</a></li>
+          <li><a href="/terminos-condiciones">Términos y Condiciones</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Cliente</h3>
+        <ul>
+          <li><a href="/contacto">Contacto</a></li>
+          <li><a href="/envios">Envíos</a></li>
+          <li><a href="/devoluciones">Devoluciones</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Tienda de Especias. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+
+  <style>
+    :global(body) {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    :global(a) {
+      color: #d9534f;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    :global(a:hover) {
+      color: #c9302c;
+      text-decoration: underline;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    header h1 a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    header h1 a:hover {
+      text-decoration: none;
+      color: #f0f0f0;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 2rem;
+      flex: 1;
+      margin-left: 3rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #d9534f;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover:after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
+      color: white;
+      padding: 4rem 1rem;
+      text-align: center;
+      border-radius: 8px;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+
+    /* Products Grid */
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .product-image-container {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+
+    .product-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image-container img {
+      transform: scale(1.05);
+    }
+
+    .product-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .product-card:hover .product-overlay {
+      opacity: 1;
+    }
+
+    .view-details {
+      background: white;
+      color: #d9534f;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .view-details:hover {
+      background: #d9534f;
+      color: white;
+      text-decoration: none;
+    }
+
+    .product-info {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-info h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+      line-height: 1.4;
+    }
+
+    .product-info h2 a {
+      color: #2c3e50;
+      text-decoration: none;
+    }
+
+    .product-info h2 a:hover {
+      color: #d9534f;
+    }
+
+    .description {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .price {
+      font-weight: 700;
+      color: #27ae60;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: #2c3e50;
+      color: white;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-section h3 {
+      margin-top: 0;
+      color: #fff;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-section a {
+      color: #bbb;
+      transition: color 0.2s ease;
+    }
+
+    .footer-section a:hover {
+      color: white;
+      text-decoration: none;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #1a252f;
+      padding: 1.5rem;
+      text-align: center;
+      color: #bbb;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        gap: 1rem;
+        margin-left: 1rem;
+      }
+
+      .hero {
+        padding: 2rem 1rem;
+      }
+
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-container {
+        gap: 1rem;
+      }
+
+      header h1 {
+        font-size: 1.2rem;
+      }
+
+      .nav-links {
+        font-size: 0.9rem;
+        gap: 0.5rem;
+        margin-left: 0.5rem;
+      }
+
+      main {
+        padding: 0 0.5rem 2rem;
+      }
+    }
+  </style>
+</body>
 </html>

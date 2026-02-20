@@ -1,0 +1,22 @@
+# Cloudflare Pages Configuration for k2spiceshop
+
+name = "k2spiceshop"
+type = "javascript"
+
+[build]
+command = "npm run build"
+cwd = "./"
+watch_paths = ["src/**/*.{ts,tsx,astro}"]
+
+[build.environment]
+NODE_ENV = "production"
+NODE_VERSION = "18"
+
+[env.production]
+name = "k2spiceshop"
+urls = ["https://k2spiceshop.com"]
+
+[env.staging]
+name = "k2spiceshop-staging"
+urls = ["https://staging.k2spiceshop.com"]
+

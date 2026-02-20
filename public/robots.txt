@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+
+Sitemap: https://k2spiceshop.com/sitemap.xml
+
+# Google Bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing Bot rules
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

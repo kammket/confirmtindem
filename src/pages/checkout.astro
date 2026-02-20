@@ -1,0 +1,489 @@
+---
+// Checkout page - Complete the purchase
+
+const SITE_TITLE = 'Pago Seguro - Tienda de Especias';
+const SITE_DESCRIPTION = 'Completa tu pago de forma segura';
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{SITE_TITLE}</title>
+  <meta name="description" content={SITE_DESCRIPTION} />
+  <meta name="robots" content="noindex, follow" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <h1><a href="/">🌶️ Tienda de Especias</a></h1>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Pago Seguro</h1>
+    
+    <div class="checkout-container">
+      <form class="checkout-form" id="checkout-form">
+        <!-- Billing and Shipping Info -->
+        <section class="form-section">
+          <h2>Información de Entrega</h2>
+          
+          <div class="form-group">
+            <label for="name">Nombre Completo *</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo Electrónico *</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Teléfono *</label>
+            <input type="tel" id="phone" name="phone" required />
+          </div>
+
+          <div class="form-group">
+            <label for="address">Dirección *</label>
+            <input type="text" id="address" name="address" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">Ciudad *</label>
+              <input type="text" id="city" name="city" required />
+            </div>
+            <div class="form-group">
+              <label for="zip">Código Postal *</label>
+              <input type="text" id="zip" name="zip" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="region">Comunidad Autónoma *</label>
+            <select id="region" name="region" required>
+              <option value="">Selecciona una comunidad...</option>
+              <option value="andalusia">Andalucía</option>
+              <option value="aragon">Aragón</option>
+              <option value="asturias">Asturias</option>
+              <option value="balearic">Baleares</option>
+              <option value="basque">País Vasco</option>
+              <option value="canary">Canarias</option>
+              <option value="cantabria">Cantabria</option>
+              <option value="castile-la-mancha">Castilla-La Mancha</option>
+              <option value="castile-leon">Castilla y León</option>
+              <option value="catalonia">Cataluña</option>
+              <option value="valencia">Valencia</option>
+              <option value="extremadura">Extremadura</option>
+              <option value="galicia">Galicia</option>
+              <option value="madrid">Madrid</option>
+              <option value="murcia">Murcia</option>
+              <option value="navarre">Navarra</option>
+              <option value="la-rioja">La Rioja</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Payment Info -->
+        <section class="form-section">
+          <h2>Información de Pago</h2>
+          
+          <div class="form-group">
+            <label for="card-name">Titular de la Tarjeta *</label>
+            <input type="text" id="card-name" name="card-name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="card-number">Número de Tarjeta *</label>
+            <input 
+              type="text" 
+              id="card-number" 
+              name="card-number" 
+              placeholder="1234 5678 9012 3456"
+              maxlength="19"
+              required 
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expiry">Vencimiento (MM/AA) *</label>
+              <input 
+                type="text" 
+                id="expiry" 
+                name="expiry" 
+                placeholder="MM/AA"
+                maxlength="5"
+                required 
+              />
+            </div>
+            <div class="form-group">
+              <label for="cvv">CVV *</label>
+              <input 
+                type="text" 
+                id="cvv" 
+                name="cvv" 
+                placeholder="123"
+                maxlength="4"
+                required 
+              />
+            </div>
+          </div>
+
+          <div class="form-group checkbox">
+            <input type="checkbox" id="terms" name="terms" required />
+            <label for="terms">Acepto los términos y condiciones *</label>
+          </div>
+
+          <button type="submit" class="submit-btn">Completar Pago</button>
+        </section>
+      </form>
+
+      <!-- Order Summary -->
+      <aside class="order-summary">
+        <div class="summary-box">
+          <h2>Resumen del Pedido</h2>
+          <div id="order-items"></div>
+          
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span id="summary-subtotal">€0.00</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Envío:</span>
+            <span>Gratis</span>
+          </div>
+
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span id="summary-total">€0.00</span>
+          </div>
+
+          <p class="security-notice">
+            ✓ Pago 100% seguro con SSL
+          </p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Tienda de Especias. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Load cart summary
+    function loadOrderSummary() {
+      const cart = JSON.parse(localStorage.getItem('k2spiceshop_cart') || '[]');
+      
+      if (cart.length === 0) {
+        window.location.href = '/carrito';
+        return;
+      }
+
+      const orderItemsContainer = document.getElementById('order-items');
+      let subtotal = 0;
+      let html = '';
+
+      cart.forEach((item: any) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        html += `
+          <div class="order-item">
+            <span>${item.name} × ${item.quantity}</span>
+            <span>€${itemTotal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      orderItemsContainer.innerHTML = html;
+      document.getElementById('summary-subtotal')!.textContent = '€' + subtotal.toFixed(2);
+      document.getElementById('summary-total')!.textContent = '€' + subtotal.toFixed(2);
+    }
+
+    // Format card number
+    const cardNumberInput = document.getElementById('card-number') as HTMLInputElement;
+    if (cardNumberInput) {
+      cardNumberInput.addEventListener('input', (e) => {
+        let value = (e.target as HTMLInputElement).value.replace(/\s/g, '');
+        let formattedValue = '';
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+          }
+          formattedValue += value[i];
+        }
+        (e.target as HTMLInputElement).value = formattedValue;
+      });
+    }
+
+    // Format expiry date
+    const expiryInput = document.getElementById('expiry') as HTMLInputElement;
+    if (expiryInput) {
+      expiryInput.addEventListener('input', (e) => {
+        let value = (e.target as HTMLInputElement).value.replace(/\D/g, '');
+        if (value.length >= 2) {
+          value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        }
+        (e.target as HTMLInputElement).value = value;
+      });
+    }
+
+    // Form submission
+    const form = document.getElementById('checkout-form') as HTMLFormElement;
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Validate form
+      const formData = new FormData(form);
+      
+      // In a real scenario, this would submit to a payment processor
+      // For demo purposes, we'll show a success message
+      
+      // Clear cart
+      localStorage.removeItem('k2spiceshop_cart');
+      
+      // Show success and redirect
+      alert('¡Gracias por tu compra! Tu pedido ha sido procesado correctamente.');
+      window.dispatchEvent(new Event('cartUpdated'));
+      window.location.href = '/confirmation';
+    });
+
+    loadOrderSummary();
+  </script>
+
+  <style>
+    :global(body) {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    header h1 a {
+      color: white;
+      text-decoration: none;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    main h1 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .checkout-container {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+    }
+
+    .checkout-form {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-section {
+      padding: 2rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .form-section:last-child {
+      border-bottom: none;
+    }
+
+    .form-section h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      color: #2c3e50;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.checkbox {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group.checkbox input {
+      width: auto;
+      margin: 0;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #2c3e50;
+      font-size: 0.95rem;
+    }
+
+    input,
+    select {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #d9534f;
+      box-shadow: 0 0 4px rgba(217, 83, 79, 0.2);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #d9534f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+      background: #c9302c;
+    }
+
+    .order-summary {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    .summary-box {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .summary-box h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+
+    .summary-row.total {
+      border: none;
+      border-top: 2px solid #ddd;
+      padding: 1rem 0;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #2c3e50;
+    }
+
+    .security-notice {
+      background: #d4edda;
+      color: #155724;
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    footer {
+      background: #2c3e50;
+      color: white;
+      margin-top: 4rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .checkout-container {
+        grid-template-columns: 1fr;
+      }
+
+      .order-summary {
+        position: static;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-section {
+        padding: 1rem;
+      }
+    }
+  </style>
+</body>
+</html>
